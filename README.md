@@ -3,12 +3,13 @@
 [Hermes Agent](https://hermes-agent.nousresearch.com/docs) skills for working with [MOS NAS](https://docs.mos-official.net).
 
 > [!IMPORTANT]
-> Unofficial and unsupported by the MOS project. The skills are working notes from hands-on testing against a MOS 0.6.0-stable VM. Anything marked UNTESTED/unverified has not been run.
+> Unofficial and unsupported by the MOS project. The skill is working notes from hands-on testing against a MOS 0.6.0-stable VM. Anything marked UNTESTED/unverified has not been run.
+
+One skill, for when you **already have a running MOS server** and want your agent to manage it:
 
 | Skill | Purpose |
 | --- | --- |
-| `skills/mos-nas-vm-setup` | Run MOS in a VM (Proxmox recipe, portable image notes, pitfalls) |
-| `skills/mos-nas-api` | Drive the MOS REST API: auth, rate limit, verified read/write calls, a 426-operation endpoint index, and a small helper script |
+| `skills/mos-nas-api` | Manage MOS through its REST API: auth, rate limit, safety rules, verified read/write calls, a 426-operation endpoint index, and a small helper script |
 
 ## Install
 
@@ -19,7 +20,6 @@ Add this repo as a skill source (tap), then install:
 hermes skills tap add bantznet/mos-hermes-skills
 hermes skills search mos-nas
 hermes skills install mos-nas-api
-hermes skills install mos-nas-vm-setup
 ```
 
 Or install one skill directly by identifier: `hermes skills install bantznet/mos-hermes-skills/skills/mos-nas-api`.
