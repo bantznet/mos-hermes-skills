@@ -8,10 +8,10 @@ description: Use when querying or managing a MOS NAS over its REST API.
 Spec: 426 operations, MOS API 0.1.0. Swagger UI at `http://<mos>/api-docs/`; the spec is embedded as `swaggerDoc` JSON in `/api-docs/swagger-ui-init.js` (there is no `/openapi.json`; those URLs return the SPA HTML). Full index: `references/endpoints.md`. Install/VM setup: see `mos-nas-vm-setup`.
 
 ## Access
-- Base `http://<mos>/api/v1` (also port 998). Env in `~/.hermes/.env`: `MOS_URL`, `MOS_API_TOKEN`.
+- Base `http://<mos>/api/v1` (also port 998). Keep the bearer token in a file readable only by you (e.g. `~/.config/mos/token`, chmod 600) and pass the base URL explicitly.
 - Auth: `Authorization: Bearer <token>`. Tokens come from `POST /auth/login` (JWT, optional MFA) or `/auth/admin-tokens` (per-token permission modes; create a read-only one for real hardware).
 - `GET /auth/admin-tokens/me` verifies the token. `/users/me` and `/auth/profile` 404 for admin tokens (no user).
-- Helper: `python3 ~/.hermes/skills/mos-nas-api/scripts/mos.py GET /pools`. Non-GET needs `--yes`.
+- Helper: `python3 <skill-dir>/scripts/mos.py --url http://<mos> --token-file ~/.config/mos/token GET /pools`. Non-GET needs `--yes`.
 
 ## Rate limit (pitfall)
 20 requests per 1s window (`RATE_LIMIT_MAX/WINDOW` in `/boot/config/api/env`; docs say don't change). A burst sweep makes everything return 429 for a while. Pace at <=5 req/s and retry 429 with a short sleep. Counters reset on API/server restart. Responses carry `RateLimit-Remaining` / `RateLimit-Reset` headers; the 429 clears within about a minute.

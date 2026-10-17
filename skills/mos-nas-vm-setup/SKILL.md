@@ -13,7 +13,7 @@ MOS = Devuan-based NAS OS. Boots UEFI from a FAT32 volume labeled `MOS` with the
 - Validate settings by hand before automating: don't build helper scripts for a platform until the manual steps are confirmed.
 
 ## Proxmox recipe (worked)
-- Build raw img: `truncate -s 16G`, `parted mklabel msdos mkpart primary fat32 1MiB 100% set 1 boot on`, loop-mount, `mkfs.vfat -F 32 -n MOS`, `unzip` onto it. ZIP extracts flat (EFI, grub, rootfs, image, drivers...).
+- Build the boot image as a plain 16 GiB image file (never a real disk): one bootable MBR partition formatted FAT32 with label `MOS`, with the release ZIP extracted flat at its root (EFI, grub, rootfs, image, drivers...). Work through a loop device on the file and unmount it afterwards.
 - VM: q35, `--bios ovmf`, efidisk `pre-enrolled-keys=0` (Secure Boot off), cpu host, 4c/8G, virtio net, scsi0=imported img (boot), scsi1=blank disk for "Install to Disk"/pools.
 - Glob pitfall: ZIP name uses underscores (`mos_*_amd64.zip`), not hyphens.
 - Non-LVM storage (e.g. Ceph RBD): a raw-device USB-passthrough fallback using /dev/pve paths does not apply.
