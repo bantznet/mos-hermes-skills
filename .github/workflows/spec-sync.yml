@@ -1,0 +1,71 @@
+name: spec-sync
+
+# Daily: when mos-vm-images publishes a new MOS release with an OpenAPI spec
+# asset, regenerate skills/mos-nas-api/references/endpoints.md and open a PR
+# if it changed. Quietly does nothing when there is no asset or no change.
+
+on:
+  schedule:
+    - cron: "41 7 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+
+concurrency:
+  group: spec-sync
+  cancel-in-progress: false
+
+jobs:
+  sync:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Find the latest release spec asset
+        id: spec
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          tag=$(gh release view --repo bantznet/mos-vm-images --json tagName -q .tagName)
+          asset=$(gh release view "$tag" --repo bantznet/mos-vm-images \
+            --json assets -q '.assets[].name | select(test("^mos-openapi-.*\\.json$"))' | head -n1)
+          if [ -z "$asset" ]; then
+            echo "No spec asset on $tag yet; nothing to do."
+            echo "found=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          gh release download "$tag" --repo bantznet/mos-vm-images --pattern "$asset" --output spec.json
+          { echo "found=true"; echo "tag=$tag"; } >> "$GITHUB_OUTPUT"
+
+      - name: Regenerate the endpoint index
+        if: steps.spec.outputs.found == 'true'
+        run: python3 .github/scripts/gen-index.py spec.json > skills/mos-nas-api/references/endpoints.md
+
+      - name: Open a PR if the index changed
+        if: steps.spec.outputs.found == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TAG: ${{ steps.spec.outputs.tag }}
+        run: |
+          set -euo pipefail
+          if git diff --quiet -- skills/mos-nas-api/references/endpoints.md; then
+            echo "Index already matches $TAG."
+            exit 0
+          fi
+          branch="spec-sync/$TAG"
+          if git ls-remote --exit-code --heads origin "$branch" >/dev/null 2>&1; then
+            echo "Branch $branch already exists; leaving the open PR alone."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git checkout -b "$branch"
+          git add skills/mos-nas-api/references/endpoints.md
+          git commit -m "Update endpoint index from $TAG spec"
+          git push origin "$branch"
+          gh pr create --base main --head "$branch" \
+            --title "Update endpoint index from $TAG spec" \
+            --body "The MOS API spec published with \`$TAG\` (mos-vm-images) differs from the committed index. Review the diff, then check whether \`SKILL.md\` needs changes for new, removed or renamed endpoints. The index only covers paths and summaries, not behavior."

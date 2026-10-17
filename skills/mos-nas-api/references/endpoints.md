@@ -20,8 +20,8 @@ POST   /auth/mfa - Verify MFA code during login [mut]
 DELETE /auth/mfa - Disable MFA [DEL]
 POST   /auth/mfa/setup - Setup or confirm MFA [mut]
 GET    /auth/profile - Get own user profile
-POST   /auth/users - Create new user (admin only) [mut]
 GET    /auth/users - Get users (admin sees all, user sees only themselves)
+POST   /auth/users - Create new user (admin only) [mut]
 PUT    /auth/users/{id} - Update user (admin can update any user, users can update themselves) [mut]
 DELETE /auth/users/{id} - Delete user (admin only) [DEL]
 
@@ -84,8 +84,8 @@ POST   /docker/mos/create - Create new container from template [mut]
 GET    /docker/mos/groups - Get all container groups
 POST   /docker/mos/groups - Create a new container group [mut]
 PUT    /docker/mos/groups/order - Update group order/index [mut]
-DELETE /docker/mos/groups/{groupId} - Delete a container group [DEL]
 PUT    /docker/mos/groups/{groupId} - Update container group (name, icon, containers) [mut]
+DELETE /docker/mos/groups/{groupId} - Delete a container group [DEL]
 POST   /docker/mos/groups/{groupId}/restart - Restart all containers in a group [mut]
 POST   /docker/mos/groups/{groupId}/start - Start all containers in a group [mut]
 POST   /docker/mos/groups/{groupId}/stop - Stop all containers in a group [mut]
@@ -190,8 +190,8 @@ GET    /mos/download - Download a file from the filesystem
 POST   /mos/drivers - Download or upgrade drivers [mut]
 DELETE /mos/drivers - Delete a driver [DEL]
 POST   /mos/editfile - Edit a file on the filesystem [mut]
-POST   /mos/fileoperations - Start a file copy or move operation [mut]
 GET    /mos/fileoperations - List all file operations
+POST   /mos/fileoperations - Start a file copy or move operation [mut]
 DELETE /mos/fileoperations/{id} - Cancel a running file operation [DEL]
 GET    /mos/fsnavigator - Browse filesystem with directory/file picker
 GET    /mos/getdrivers - Get available driver releases
@@ -519,5 +519,5 @@ GET    /iscsi/targets/{targetId} - Get a specific iSCSI target
 PUT    /iscsi/targets/{targetId} - Update an iSCSI target [mut]
 DELETE /iscsi/targets/{targetId} - Delete an iSCSI target [DEL]
 POST   /iscsi/targets/{targetId}/luns - Add a LUN to an iSCSI target [mut]
-DELETE /iscsi/targets/{targetId}/luns/{lunId} - Remove a LUN from an iSCSI target [DEL]
 PUT    /iscsi/targets/{targetId}/luns/{lunId} - Update a LUN in an iSCSI target [mut]
+DELETE /iscsi/targets/{targetId}/luns/{lunId} - Remove a LUN from an iSCSI target [DEL]
