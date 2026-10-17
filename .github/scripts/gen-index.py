@@ -7,6 +7,7 @@ import json
 import sys
 from collections import defaultdict
 
+ORDER = ['get', 'post', 'put', 'patch', 'delete']  # stable output regardless of key order
 doc = json.load(open(sys.argv[1]))
 groups = defaultdict(list)
 for path, methods in doc['paths'].items():
@@ -20,5 +21,5 @@ out = [f"# MOS API endpoint index (spec {version}, base /api/v1)\n",
        "GET = read. [mut] = POST/PUT/PATCH. [DEL] = DELETE.\n"]
 for tag in sorted(groups):
     out.append(f"\n## {tag} ({len(groups[tag])})\n")
-    out += sorted(groups[tag], key=lambda s: s.split()[1])
+    out += sorted(groups[tag], key=lambda s: (s.split()[1], ORDER.index(s.split()[0].lower())))
 print('\n'.join(out))
