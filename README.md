@@ -12,7 +12,7 @@
 
 ## Install
 
-### With the Hermes CLI (repo must be public)
+### With the Hermes CLI
 Add this repo as a skill source (tap), then install:
 
 ```bash
@@ -25,7 +25,7 @@ hermes skills install mos-nas-vm-setup
 Or install one skill directly by identifier: `hermes skills install bantznet/mos-hermes-skills/skills/mos-nas-api`.
 Installs are security-scanned; inspect first with `hermes skills inspect <identifier>`.
 
-> Status: tap/install commands are taken from the Hermes docs and not yet run against this repo (UNTESTED).
+> Status: tested on Hermes with a clean skills directory. Both skills install with a SAFE scan verdict.
 
 ### Manually
 Copy (or symlink) a skill folder into your Hermes skills directory:
@@ -34,7 +34,7 @@ Copy (or symlink) a skill folder into your Hermes skills directory:
 cp -r skills/mos-nas-api ~/.hermes/skills/
 ```
 
-`mos-nas-api` reads `MOS_URL` (e.g. `http://192.168.1.50`) and `MOS_API_TOKEN` from `~/.hermes/.env`. Create the token in MOS (admin tokens); prefer a read-only one for real hardware. Never commit it.
+`mos-nas-api` needs the MOS base URL and an admin API token. Save the token to a file only you can read (e.g. `~/.config/mos/token`, chmod 600) and pass `--url` and `--token-file` to `scripts/mos.py`. Prefer a read-only token on real hardware. Never commit it.
 
 ## License
 MIT. MOS and its components keep their own licenses.
