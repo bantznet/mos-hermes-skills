@@ -76,10 +76,12 @@ DELETE /disks/{device}/wipe - Wipe entire disk [DEL]
 GET    /disks/websocket/events - Disks WebSocket Events Documentation
 GET    /disks/websocket/stats - Get Disks WebSocket monitoring statistics
 
-## Docker (25)
+## Docker (27)
 
 GET    /docker/mos/containers - Get Docker images with update status
 POST   /docker/mos/containers - Update Docker container indices [mut]
+GET    /docker/mos/containers/calc - Get container image sizes
+GET    /docker/mos/containers/{name}/calc - Get a single container image size
 POST   /docker/mos/create - Create new container from template [mut]
 GET    /docker/mos/groups - Get all container groups
 POST   /docker/mos/groups - Create a new container group [mut]
@@ -104,7 +106,7 @@ POST   /docker/{path} - Docker REST API Proxy (POST) [mut]
 PUT    /docker/{path} - Docker REST API Proxy (PUT) [mut]
 DELETE /docker/{path} - Docker REST API Proxy (DELETE) [DEL]
 
-## Docker Compose (13)
+## Docker Compose (14)
 
 GET    /docker/mos/compose/stacks - Get all compose stacks
 POST   /docker/mos/compose/stacks - Create a new compose stack [mut]
@@ -116,6 +118,7 @@ POST   /docker/mos/compose/stacks/{name}/pull - Pull images for a compose stack 
 POST   /docker/mos/compose/stacks/{name}/restart - Restart a compose stack [mut]
 POST   /docker/mos/compose/stacks/{name}/start - Start a compose stack [mut]
 POST   /docker/mos/compose/stacks/{name}/stop - Stop a compose stack [mut]
+POST   /docker/mos/compose/stacks/{name}/sync-shas - Sync local SHAs to remote SHAs for a compose stack [mut]
 POST   /docker/mos/compose/stacks/{name}/upgrade - Upgrade a compose stack to latest images [mut]
 GET    /docker/mos/compose/templates - Get all compose template names
 GET    /docker/mos/compose/templates/{name} - Get specific compose template
@@ -134,7 +137,7 @@ GET    /mos/fileoperations/websocket/events - WebSocket Events Documentation
 POST   /llm/chat - Send a message to the LLM [mut]
 GET    /llm/status - Get LLM container status
 
-## LXC (30)
+## LXC (31)
 
 GET    /lxc/backups - List all containers with their backups
 GET    /lxc/containers - List all LXC Containers
@@ -146,6 +149,7 @@ POST   /lxc/containers/{name}/backups - Create a backup of a container [mut]
 POST   /lxc/containers/{name}/backups/abort - Abort an active backup operation [mut]
 POST   /lxc/containers/{name}/backups/restore - Restore a container from backup [mut]
 DELETE /lxc/containers/{name}/backups/{filename} - Delete a specific backup file [DEL]
+GET    /lxc/containers/{name}/calc - Calculate container rootfs size
 POST   /lxc/containers/{name}/convert-btrfs - Convert container rootfs to BTRFS subvolume [mut]
 POST   /lxc/containers/{name}/freeze - Freeze (pause) a container [mut]
 POST   /lxc/containers/{name}/kill - Forcefully stop a container (kill) [mut]
@@ -172,7 +176,7 @@ GET    /lxc/snapshots - List all containers with their snapshots
 GET    /lxc/websocket/events - WebSocket Events Documentation
 GET    /lxc/websocket/stats - Get LXC WebSocket statistics
 
-## MOS (87)
+## MOS (94)
 
 GET    /mos/bootbackupfiles - Get boot backup files
 GET    /mos/certificates - Get SSL certificate information
@@ -194,6 +198,11 @@ GET    /mos/fileoperations - List all file operations
 POST   /mos/fileoperations - Start a file copy or move operation [mut]
 DELETE /mos/fileoperations/{id} - Cancel a running file operation [DEL]
 GET    /mos/fsnavigator - Browse filesystem with directory/file picker
+GET    /mos/fsnavigator/bookmarks - List all filesystem bookmarks
+POST   /mos/fsnavigator/bookmarks - Replace all filesystem bookmarks [mut]
+PUT    /mos/fsnavigator/bookmarks - Create a new filesystem bookmark [mut]
+DELETE /mos/fsnavigator/bookmarks - Delete one or all filesystem bookmarks [DEL]
+POST   /mos/fsnavigator/calc - Calculate directory size [mut]
 GET    /mos/getdrivers - Get available driver releases
 GET    /mos/getkernel - Get available kernel releases
 GET    /mos/getreleases - Get available MOS releases
@@ -232,6 +241,8 @@ GET    /mos/settings/network/services - Get network services
 POST   /mos/settings/network/services - Update network services [mut]
 GET    /mos/settings/network/services/rsync/config - Get rsync daemon configuration
 POST   /mos/settings/network/services/rsync/config - Update rsync daemon configuration [mut]
+GET    /mos/settings/network/services/samba/config - Get Samba extra configuration
+POST   /mos/settings/network/services/samba/config - Update Samba extra configuration [mut]
 GET    /mos/settings/notifications/email - Get email notification provider config
 POST   /mos/settings/notifications/email - Update email notification provider config [mut]
 GET    /mos/settings/notifications/providers - Get all notification providers
@@ -462,7 +473,7 @@ GET    /users/{id} - Get specific user (admin only)
 PUT    /users/{id} - Update user (admin only for other users) [mut]
 DELETE /users/{id} - Delete user (admin only) [DEL]
 
-## VM (27)
+## VM (28)
 
 GET    /vm/binfmt_architectures - Get available binfmt architectures
 GET    /vm/capabilities - Get VM capabilities
@@ -474,6 +485,7 @@ GET    /vm/machines/usage - Get resource usage for all VMs
 DELETE /vm/machines/{name} - Delete a virtual machine [DEL]
 GET    /vm/machines/{name}/autostart - Get autostart status of a virtual machine
 PUT    /vm/machines/{name}/autostart - Set autostart status for a virtual machine [mut]
+GET    /vm/machines/{name}/calc - Calculate VM disk sizes
 GET    /vm/machines/{name}/config - Get simplified VM configuration
 PUT    /vm/machines/{name}/config - Update VM with simplified configuration [mut]
 POST   /vm/machines/{name}/kill - Kill a virtual machine (force stop) [mut]
